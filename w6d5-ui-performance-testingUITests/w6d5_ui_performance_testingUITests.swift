@@ -27,6 +27,7 @@ class w6d5_ui_performance_testingUITests: XCTestCase {
     
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
+        deleteAllMeals()
         super.tearDown()
     }
     
@@ -44,7 +45,7 @@ class w6d5_ui_performance_testingUITests: XCTestCase {
         let staticText = tablesQuery.staticTexts["\(mealName.lowercased()) - \(numberOfCalories)"]
         if staticText.exists {
             staticText.tap()
-            XCTAssert(app.staticTexts["detailViewControllerLabel"].exists)
+            XCTAssertEqual(app.staticTexts["detailViewControllerLabel"].label, "\(mealName.lowercased()) - \(numberOfCalories)")
             app.navigationBars["Detail"].buttons["Master"].tap()
         }
     }
@@ -55,7 +56,14 @@ class w6d5_ui_performance_testingUITests: XCTestCase {
         if staticText.exists {
             staticText.swipeLeft()
             tablesQuery.buttons["Delete"].tap()
-            
+        }
+    }
+    
+    func deleteAllMeals() {
+        while app.tables.cells.count > 0 {
+            let cells = app.tables.cells.allElementsBoundByAccessibilityElement
+                cells[0].swipeLeft()
+                app.tables.cells.buttons["Delete"].tap()
         }
     }
     
