@@ -32,6 +32,31 @@ class w6d5_ui_performance_testingUITests: XCTestCase {
     
     func testAddMeal() {
         addNewMeal(mealName: "burger", numberOfCalories: 300)
+//        deleteMeal(mealName: "burger", numberOfCalories: 300)
+    }
+    
+    func testShowDetail() {
+        showDetail(mealName: "burger", numberOfCalories: 300)
+    }
+    
+    func showDetail(mealName: String, numberOfCalories: Int) {
+        let tablesQuery = app.tables
+        let staticText = tablesQuery.staticTexts["\(mealName.lowercased()) - \(numberOfCalories)"]
+        if staticText.exists {
+            staticText.tap()
+            XCTAssert(app.staticTexts["detailViewControllerLabel"].exists)
+            app.navigationBars["Detail"].buttons["Master"].tap()
+        }
+    }
+    
+    func deleteMeal(mealName: String, numberOfCalories: Int) {
+        let tablesQuery = app.tables
+        let staticText = tablesQuery.staticTexts["\(mealName.lowercased()) - \(numberOfCalories)"]
+        if staticText.exists {
+            staticText.swipeLeft()
+            tablesQuery.buttons["Delete"].tap()
+            
+        }
     }
     
     func addNewMeal(mealName: String, numberOfCalories: Int) {
@@ -41,7 +66,6 @@ class w6d5_ui_performance_testingUITests: XCTestCase {
         app.navigationBars["Master"].buttons["Add"].tap()
         
         let addAMealAlert = app.alerts["Add a Meal"]
-        addAMealAlert.staticTexts["Add a Meal"].tap()
         
         let collectionViewsQuery = addAMealAlert.collectionViews
         collectionViewsQuery.children(matching: .other).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element(boundBy: 1).children(matching: .textField).element.tap()
@@ -64,5 +88,4 @@ class w6d5_ui_performance_testingUITests: XCTestCase {
 
         addAMealAlert.buttons["Ok"].tap()
     }
-    
 }
